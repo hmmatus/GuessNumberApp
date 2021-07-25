@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import AppLoading from 'expo-app-loading';
 
 //Shared
 import Header from './packages/components/Header';
@@ -19,6 +20,11 @@ const App = ({}) => {
     setGuessRounds(numOfRounds);
   };
 
+  const configureNewGameHandler = () => {
+    setGuessRounds(0);
+    setUserNumber(null);
+  };
+
   let content = <StartGameScreen onStartGame={startGameHandler} />;
 
   if (userNumber && guessRounds <= 0) {
@@ -26,7 +32,13 @@ const App = ({}) => {
       <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />
     );
   } else if (guessRounds > 0) {
-    content = <GameOverScreen />;
+    content = (
+      <GameOverScreen
+        roundsNumber={guessRounds}
+        userNumber={userNumber}
+        onRestart={configureNewGameHandler}
+      />
+    );
   }
 
   return (

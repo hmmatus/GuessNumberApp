@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "expo-app-loading": "^1.1.2",
     "react": "17.0.1",
     "react-native": "0.64.2"
   },

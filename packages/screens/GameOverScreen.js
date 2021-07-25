@@ -17,12 +17,15 @@ import Input from '../components/Input';
 import Colors from '../constants/colors';
 import NumberContainer from '../components/NumberContainer';
 
-const GameOverScreen = ({}) => {
+const GameOverScreen = ({roundsNumber, userNumber, onRestart}) => {
 
 
   return (
-    <View>
+    <View style={styles.screen}>
       <Text>Game Over</Text>
+      <Text>Number of rounds: {roundsNumber}</Text>
+      <Text> User Number {userNumber}</Text>
+      <Button title="New Game" onPress={onRestart}/>
     </View>
   );
 };
