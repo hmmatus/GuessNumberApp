@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  ScrollView,
 } from 'react-native';
 
 // Shared
@@ -16,6 +17,8 @@ import Card from '../components/Card';
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 import NumberContainer from '../components/NumberContainer';
+import MainButton from '../components/MainButton';
+import BodyText from '../components/typograpy/BodyText';
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -28,9 +31,18 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
+ const renderListItem = (value, numberOfRounds) => {
+return (
+  <View key={value} style={styles.listItem}>
+    <BodyText>#{numberOfRounds}</BodyText>
+    <BodyText>{value}</BodyText>
+  </View>
+);};
+
 const GameScreen = ({userChoice, onGameOver}) => {
-  const [currentguess, setCurrentGuess] = useState(generateRandomBetween(1, 100, userChoice));
-  const [rounds, setRounds] = useState(0);
+  const initialGuess = generateRandomBetween(1, 100, userChoice);
+  const [currentguess, setCurrentGuess] = useState(initialGuess);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
 
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
@@ -43,28 +55,33 @@ const GameScreen = ({userChoice, onGameOver}) => {
     if (direction === 'lower') {
       currentHigh.current = currentguess;
     } else {
-      currentLow.current = currentguess;
+      currentLow.current = currentguess + 1;
     }
 
     const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentguess);
     setCurrentGuess(nextNumber);
-    setRounds(curRounds => curRounds + 1);
+    setPastGuesses(previusGuess => [nextNumber,...previusGuess]);
   };
 
   useEffect(() => {
     if (currentguess === userChoice) {
-      onGameOver(rounds);
+      onGameOver(pastGuesses.length);
     }
-  }, [currentguess, onGameOver, rounds, userChoice]);
+  }, [currentguess, onGameOver, pastGuesses, userChoice]);
 
   return (
     <View style={styles.screen}>
       <Text>Oponents Guess</Text>
       <NumberContainer>{currentguess}</NumberContainer>
       <Card style={styles.buttonContainer}>
-        <Button title="LOWER" onPress={nextGuessHandler.bind(this, 'lower')}/>
-        <Button title="GREATER" onPress={nextGuessHandler.bind(this, 'greater')}/>
+        <MainButton onPress={nextGuessHandler.bind(this, 'lower')}>LOWER</MainButton>
+        <MainButton onPress={nextGuessHandler.bind(this, 'greater')}>GREATER</MainButton>
       </Card>
+      <View style={styles.list}>
+        <ScrollView>
+          {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -81,6 +98,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 300,
     maxWidth: '80%',
+  },
+  list: {
+    flex: 1,
+    width: '80%',
+  },
+  listItem: {
+    borderColor: '#ccc',
+    padding: 15,
+    borderWidth: 1,
+    marginVertical: 10,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 

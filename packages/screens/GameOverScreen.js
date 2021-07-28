@@ -3,28 +3,27 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
-  TextInput,
   Button,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
+  Image,
+  Text,
 } from 'react-native';
 
 // Shared
-import Card from '../components/Card';
-import Input from '../components/Input';
 import Colors from '../constants/colors';
-import NumberContainer from '../components/NumberContainer';
+import TitleText from '../components/typograpy/TitleText';
+import BodyText from '../components/typograpy/BodyText';
 
 const GameOverScreen = ({roundsNumber, userNumber, onRestart}) => {
 
 
   return (
     <View style={styles.screen}>
-      <Text>Game Over</Text>
-      <Text>Number of rounds: {roundsNumber}</Text>
-      <Text> User Number {userNumber}</Text>
+      <TitleText>Game Over!</TitleText>
+      <View style={styles.imageContainer}>
+        <Image style={styles.image} source={require('../assets/images/success.png')}/>
+      </View>
+      <BodyText>Number of rounds: <Text style={styles.specialText}>{roundsNumber}</Text></BodyText>
+      <BodyText> User Number <Text style={styles.specialText}>{userNumber}</Text></BodyText>
       <Button title="New Game" onPress={onRestart}/>
     </View>
   );
@@ -35,6 +34,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  specialText: {
+    color: Colors.accent,
+    fontWeight: 'bold',
+  },
+  imageContainer: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
 });
 
